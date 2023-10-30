@@ -1,0 +1,195 @@
+<div class="card mt-3">
+    <div class="card-header">
+        <h1 class="text-2xl font-bold">Booking</h1>
+    </div>
+</div>
+<style>
+    .table-container {
+  max-height: 500px; /* set the desired height of the container */
+  overflow: auto; /* enable scrolling */
+}
+
+table {
+  width: 100%; /* make the table fill its container */
+  border-collapse: collapse; /* remove the default spacing between cells */
+}
+
+th, td {
+  padding: 10px; /* add some padding to cells */
+  border: 1px solid #ddd; /* add borders to cells */
+}
+
+th {
+  background-color: #f2f2f2; /* add background color to header cells */
+}
+</style>
+<div class="flex mt-2">
+    <a href="/dashboard?page=reservation&action=create" class="btn btn-primary">Add Reservation</a>
+    
+</div>
+<div class="flex mt-2">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="name-search">Name</span>
+        <input id="guest-search" type="text" class="form-control" placeholder="Name of guests" aria-label="name" aria-describedby="name-search">
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">Reservation_id</span>
+        <input id="idre-search" type="text" class="form-control" placeholder="Reservation id" aria-label="Username" aria-describedby="id-search">
+      </div>
+</div>
+
+  
+  
+<table class="table table-striped table-container">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Reservation's Name</th>
+            <th>Check-in Date</th>
+            <th>Check-out Date</th>
+            <th>Room</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let i = 0; i < data.reservations.length; i++) { %>
+            <tr>
+                <td><%= data.reservations[i].id %></td>
+                <td><%= data.reservations[i].reservation_guest_name %></td>
+                <td><%= data.reservations[i].check_in_date %></td>
+                <td><%= data.reservations[i].check_out_date %></td>
+                <td><%= data.reservations[i].status %></td>
+                <td>
+                    <% if (data.reservations[i].check_in_date == data.today && data.reservations[i].status == 'upcoming') { %>
+                        <a href="/dashboard?page=checkin&id=<%= data.reservations[i].id %>" class="btn btn-success">Check-in</a>
+                    <% } %>
+                    <% if (data.reservations[i].check_out_date == data.today) { %>
+                        <a href="/reservations/<%= data.reservations[i].id %>/checkout" class="btn btn-warning">Check-out</a>
+                    <% } %>
+                    <a href="/reservations/<%= data.reservations[i].id %>/edit" class="btn btn-primary">Edit</a>
+                    <form action="/reservations/<%= data.reservations[i].id %>/delete" method="POST" style="display: inline-block;">
+                        <button type="submit" class="btn btn-danger">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+
+<script>
+    //Create sweet alert for check-in
+    // const checkin_confirm = document.querySelectorAll('#');
+    // checkin_confirm.forEach(button => {
+    //   button.addEventListener('click', () => {
+    //     const id = button.getAttribute('data-id');
+    //     Swal.fire({
+    //       title: 'Are you sure?',
+    //       text: `You will Checkin ${id} reservations id`,
+    //       icon: 'warning',
+    //       showCancelButton: true,
+    //       confirmButtonColor: '#3085d6',
+    //       cancelButtonColor: '#d33',
+    //       confirmButtonText: 'Yes, Checkin it!'
+    //     }).then((result) => {
+    //       if (result.isConfirmed) {
+    //         //use fetch method to delete document
+    //         fetch(`/reservations/${id}/checkin`, {
+    //           method: 'GET'
+    //         }).then(res => {
+    //           if (res.status === 200) {
+    //             Swal.fire(
+    //               {
+    //                 position: 'top-end',
+    //                 icon: 'success',
+    //                 title: `Your has checkin ${id} reservations id`,
+    //                 showConfirmButton: false,
+    //                 timer: 1500
+    //               }
+    //             ).then(() => {
+    //               //Reload page after delete document
+    //               window.location.reload();
+    //             })
+    //           }
+    //         })
+    //       }
+    //     })
+    //   })
+    // })
+
+    //Create sweet alert for check-out
+    // const checkout_confirm = document.querySelectorAll('#');
+    // checkout_confirm.forEach(b => {
+    //     b.addEventListener('click', () => {
+    //         const id = b.getAttribute('data-id');
+    //         Swal.fire({
+    //             title: 'Are you sure?',
+    //             text: `You will Checkout ${id} reservations id`,
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonColor: '#3085d6',
+    //             cancelButtonColor: '#d33',
+    //             confirmButtonText: 'Yes, Check out it!'
+    //         }).then((result) => {
+    //             if (result.isConfirmed) {
+    //                 //use fetch method to delete document
+    //                 fetch(`/reservations/${id}/checkout`, {
+    //                     method: 'GET'
+    //                 }).then(res => {
+    //                     if (res.status === 200) {
+    //                         Swal.fire(
+    //                             {
+    //                                 position: 'top-end',
+    //                                 icon: 'success',
+    //                                 title: `Your has checkout ${id} reservations id`,
+    //                                 showConfirmButton: false,
+    //                                 timer: 1500
+    //                             }
+    //                         ).then(() => {
+    //                             //Reload page after delete document
+    //                             window.location.reload();
+    //                         })
+    //                     }
+    //                 })
+    //             }
+    //         })
+    //     })
+    // })
+
+    //make a search function
+    const namesearch = document.querySelector('#guest-search');
+    namesearch.addEventListener('keyup', () => {
+        const namesearchValue = namesearch.value;
+        const table = document.querySelector('.table-container');
+        const tr = table.querySelectorAll('tr');
+        tr.forEach(row => {
+            const td = row.querySelectorAll('td')[1];
+            if (td) {
+                const text = td.textContent;
+                if (text.indexOf(namesearchValue) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        })
+    })
+
+    //make a search function
+    const idsearch = document.querySelector('#idre-search');
+    idsearch.addEventListener('keyup', () => {
+        const idsearchValue = idsearch.value;
+        const table = document.querySelector('.table-container');
+        const tr = table.querySelectorAll('tr');
+        tr.forEach(row => {
+            const td = row.querySelectorAll('td')[0];
+            if (td) {
+                const text = td.textContent;
+                if (text.indexOf(idsearchValue) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        })
+    })
+</script>

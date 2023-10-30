@@ -1,0 +1,105 @@
+<div class="card mt-3">
+    <div class="card-header">
+        <h1 class="text-2xl font-bold">Dashboard</h1>
+    </div>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-6">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-xl font-bold">Active Rooms</h1>
+            <!-- <h1 class="text-4xl font-bold text-red-500"><%= data.active_rooms %></h1> -->
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-xl font-bold">Total Reservations (Today)</h1>
+            <h1 class="text-4xl font-bold text-purple-500"><%= data.total_reservations_today %></h1>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-xl font-bold">Uncleaned rooms</h1>
+            <h1 class="text-4xl font-bold text-yellow-500"><%= data.uncleaned_rooms %></h1>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-xl font-bold">Avaliable Rooms</h1>
+            <h1 class="text-4xl font-bold text-green-500"><%= data.available_rooms %></h1>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-xl font-bold">Staff Active</h1>
+            <h1 class="text-4xl font-bold text-pink-500"><%= data.staff_active %></h1>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="text-xl font-bold">Open maintenance requests</h1>
+            <h1 class="text-4xl font-bold text-indigo-500"><%= data.open_maintenance_requests %></h1>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-6">
+    <div class="table mt-3">
+        <!-- Show only 20 recent reservation -->
+        <h1 class="text-2xl mb-3">Recent Reservations</h1>
+        <table class="w-full border">
+            <thead>
+                <tr>
+                    <th class="border">Guest Name</th>
+                    <th class="border">Check-in Date</th>
+                    <th class="border">Check-out Date</th>
+                    <th class="border">Room Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                </tr>
+                <tr>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                </tr>
+                <tr>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                    <td class="border">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="table mt-3">
+        <h1 class="text-2xl mb-3">Remaining Guests About to Check-in (Today)</h1>
+        <table class="w-full border">
+            <thead>
+                <tr>
+                    <th class="border">Guest Name</th>
+                    <th class="border">Check-in Date</th>
+                    <th class="border">Check-out Date</th>
+                    <th class="border">Room Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < data.remaining_checkins_today.length; i++) { %>
+                    <tr>
+                        <td class="border"><%= data.remaining_checkins_today[i].reservation_guest_name %></td>
+                        <td class="border"><%= data.remaining_checkins_today[i].check_in_date %></td>
+                        <td class="border"><%= data.remaining_checkins_today[i].check_out_date %></td>
+                        <td class="border"><%= data.remaining_checkins_today[i].reservation_phone %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+
+        </table>
+</div>

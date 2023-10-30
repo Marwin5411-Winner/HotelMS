@@ -1,0 +1,111 @@
+<div class="card mt-3">
+    <div class="card-header">
+        <h1 class="text-2xl font-bold">Check in</h1>
+    </div>
+</div>
+
+
+<div class="">
+    <form>
+        <h4>Reservation Details</h4>
+        <div class="grid">
+            <div class="form-group">
+                <label for="reservation-id">Reservation ID:</label>
+                <input type="text" class="form-control" id="reservation-id" name="reservation-id"
+                    value="<%= data.reservations.id %>" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="check-in-date">Check-in Date:</label>
+                <input type="text" class="form-control" id="check-in-date" name="check-in-date"
+                    value="<%= data.reservations.check_in_date %>" readonly>
+            </div>
+            <div class="form-group">
+                <label for="check-out-date">Check-out Date:</label>
+                <input type="text" class="form-control" id="check-out-date" name="check-out-date"
+                    value="<%= data.reservations.check_out_date %>" readonly>
+            </div>
+            <div class="form-group">
+                <label for="reservation-guest-name">Guest Name:</label>
+                <input type="text" class="form-control" id="reservation-guest-name" name="reservation-guest-name"
+                    value="<%= data.reservations.reservation_guest_name %>" readonly>
+            </div>
+            <div class="form-group">
+                <label for="reservation-guest-email">Guest Email:</label>
+                <input type="text" class="form-control" id="reservation-guest-email" name="reservation-guest-email"
+                    value="<%= data.reservations.reservation_guest_email %>" readonly>
+            </div>
+            <div class="form-group">
+                <label for="reservation-guest-phone">Guest Phone:</label>
+                <input type="text" class="form-control" id="reservation-guest-phone" name="reservation-guest-phone"
+                    value="<%= data.reservations.reservation_guest_phone %>" readonly>
+            </div>
+            <div class="form-group">
+                <label for="reservation-guest-address">Paid</label>
+                <input type="text" class="form-control" id="reservation-guest-address" name="reservation-guest-address"
+                    value="<%= data.reservations.paid %>" readonly>
+            </div>
+        </div>
+
+    </form>
+</div>
+<h5 class="text-2xl">
+    Room Assignd
+</h5>
+<table>
+    <tr>
+        <th>Room Number</th>
+        <th>Room Type</th>
+        <th>Room Rate</th>
+        <th>Room Status</th>
+    </tr>
+    <tr>
+        <% for (let i=0; i < data.rooms.length; i++) { %>
+            <td><input type="text" class="form-control" id="room-assign" name="room-assign"
+                    value="<%= data.rooms[i].room_number %>" readonly></td>
+            <td><input type="text" class="form-control" id="room-type" name="room-type"
+                    value="<%= data.rooms[i].room_type %>" readonly></td>
+            <td><input type="text" class="form-control" id="room-rate" name="room-rate"
+                    value="<%= data.rooms[i].room_rate %>" readonly></td>
+            <td><input type="text" class="form-control" id="room-status" name="room-status"
+                    value="<%= data.rooms[i].room_status %>" readonly></td>
+            <% } %>
+    </tr>
+</table>
+
+<!-- Next Feature add or assign Reservations id to guest -->
+<button id="checkin-confirm" class="btn btn-primary mt-5">Check in</button>
+
+<script>
+    //Sweet alert to confirm when player click check in button and wait for response 200 from server to redirect to dashboard
+    const checkin_confirm = document.querySelector('#checkin-confirm');
+    checkin_confirm.addEventListener('click', function () {
+        Swal.fire({
+            title: 'Are you sure to Check-in?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#60A5FA',
+            cancelButtonColor: '#EF4444',
+            confirmButtonText: 'Yes, Check-in!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/reservations/<%= data.reservations.id %>/checkin`, {
+                    method: 'GET',
+                }).then((res) => {
+                    Swal.fire(
+                        'Check-in!',
+                        'Your reservation has been Check-in.',
+                        'success'
+                    )
+                    setTimeout(function () {
+                        window.location.href = '/dashboard?page=booking';
+                    }, 2000);
+                })
+            }
+        })
+    })
+
+
+
+</script>
